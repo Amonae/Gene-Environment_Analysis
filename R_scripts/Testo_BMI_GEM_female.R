@@ -21,7 +21,7 @@ library(cli)
 # using cov file and pheno file that were made in "Hormones.R"
 
 pheno = fread("/data/Hormones/pheno_file_f.txt")
-covar = fread("/projects/Hormones/cov_file_f.txt")
+covar = fread("/data/Hormones/cov_file_f.txt")
 names(pheno)
 names(covar)
 
@@ -293,46 +293,6 @@ write.table(interaction, file = "interaction_FUMA.txt", row.names = F, quote = F
 write.table(joint, file = "joint_FUMA.txt", row.names = F, quote = F)
 
 #Note for FUMA: there are 180596 samples
-
-
-####Post-FUMA analysis. Done in Rstudio 
-
-
-###****** THIS SECTION THROUGH LINE 337 is incorrect. It analyzes the wrong thing***#####
-#getwd()
-#joint_loci = fread("FUMA_testoxBMI_joint_f/GenomicRiskLoci.txt") #
-#marg_loci = fread("FUMA_testoxBMI_marg_f/GenomicRiskLoci.txt")  # 
-
-#common_loci = intersect(joint_loci$uniqID, marg_loci$uniqID) # There are 93 loci common between the 2 
-
-#joint_unique = setdiff(joint_loci$rsID,marg_loci$rsID) # length = 27
-
-# Going to extract BETA and pvalues from results dfs
-
-#marg = fread("/projects/sunlab/Students_Work/Amonae_work/GEM_testo_BMI/Female/marginal_FUMA.txt")
-#joint = fread("/projects/sunlab/Students_Work/Amonae_work/GEM_testo_BMI/Female/joint_FUMA.txt")
-#inter = fread("/projects/sunlab/Students_Work/Amonae_work/GEM_testo_BMI/Female/interaction_FUMA.txt")
-
-
-#joint_unique_BP = joint[joint$SNPID %in% joint_unique, c(1,6,8)] 
-#names(joint_unique_BP)[c(2,3)] = c("BETA_joint", "P_joint")
-
-#marg_BP = marg[marg$SNPID %in% joint_unique, c(1,6,8)] 
-#names(marg_BP)[c(2,3)] = c("BETA_marg", "P_marg")
-
-#inter_BP = inter[inter$SNPID %in% joint_unique, c(1,6,8)] 
-#names(inter_BP)[c(2,3)] = c("BETA_inter", "P_inter")
-
-#comparison_df = list(marg_BP, inter_BP, joint_unique_BP)
-#comparison_df = Reduce(function(x, y) merge(x, y, all=TRUE), comparison_df)
-
-#write.csv(comparison_df, file = "TestoxBMI_joint_loci_comparison.csv")
-
-# Pvals for marg and sig at the interaction risk loci
-#risk_inter = c('rs10915816', 'rs116537641', 'rs71530672', 'rs115022473', 'rs547146423', 'rs9929490', 'rs16986608', 'rs117560775') # from FUMA
-#marg[marg$SNPID %in% risk_inter, c(1,6,8)]
-#joint[joint$SNPID %in% risk_inter, c(1,6,8)]
-#inter[inter$SNPID %in% risk_inter, c(1,6,8)]
 
 ###############     PLINK
 # Want to run GWAS for feamles vs BMI
