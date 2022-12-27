@@ -3,25 +3,25 @@
 
 
 ### Terminal
-$ srun -p sunlab --pty bash # interactive node 
+#$ srun -p sunlab --pty bash # interactive node 
 
 
 ### open R
-$ ml R/4.0.3  # module load
-$ R           # open module 
+#$ ml R/4.0.3  # module load
+#$ R           # open module 
 
 # load packages --Again this is all done in the HPC terminal
 rm(list=ls())
-library(data.table,lib.loc="/projects/sunlab/R.lib")
-library(crayon,lib.loc="/projects/sunlab/R.lib")
-library(dplyr,lib.loc="/projects/sunlab/R.lib")
-library(cli,lib.loc="/projects/sunlab/R.lib")
+library(data.table)
+library(crayon)
+library(dplyr)
+library(cli)
 
 
-# using cov file and pheno file that were made in "Regenie_hormones.R"
+# using cov file and pheno file that were made in "Hormones.R"
 
-pheno = fread("/projects/sunlab/Students_Work/Amonae_work/Regenie_hormones/pheno_file_f.txt")
-covar = fread("/projects/sunlab/Students_Work/Amonae_work/Regenie_hormones/cov_file_f.txt")
+pheno = fread("/data/Hormones/pheno_file_f.txt")
+covar = fread("/projects/Hormones/cov_file_f.txt")
 names(pheno)
 names(covar)
 
@@ -35,7 +35,7 @@ dim(testo_GEM)
 # [1] 198429     17
 
 
-## Remove Relatedness (entire section from Ellen)
+## Remove Relatedness
 kin<-read.table("/projects/sunlab/UKB/Data_raw/ukb34031_rel_s488363.dat",header=T)
 dim(kin) #107156      5
 kin<-kin[kin$Kinship>=0.0884,] #2nd degree
@@ -58,15 +58,15 @@ testo_GEM<- subset(testo_GEM, !testo_GEM$IID %in% exclude)
 dim(testo_GEM) # 181536     17
 
 
-# Adding in UKB BMI data from Chang 
+# Adding in UKB BMI data
 
-BMI = fread("/projects/sunlab/Students_Work/Chang_work/UKB_BMI/Enrol_BMI.csv")
+BMI = fread("/data/UKB_BMI/Enrol_BMI.csv")
 head(BMI)
 
-# Adding primary care BMI using Chang code
-pricare <- fread("/projects/sunlab/Students_Work/Ellen_work/Longitudinal_BMI/primarycare_BMI_weight_height.txt",header=T,stringsAsFactors=F)
+# Adding primary care BMI data
+pricare <- fread("/data/Longitudinal_BMI/primarycare_BMI_weight_height.txt",header=T,stringsAsFactors=F)
 dim(pricare) #4157208       8
-head(pricare)  # I think read_2 and read_3 contain the codes for the values that are in value1-3
+head(pricare)  
 table(pricare$read_2)
 #          229..   22A..   22K..      
 #2972794  260751  489647  434016
@@ -114,7 +114,7 @@ summary(pricare)
 # Comparing IID in the 2 dfs
 colnames(BMI)[c(1,4)] = c("IID", "BMI")
 colnames(pricare)[c(1,3)] = c("IID", "BMI")
-length(setdiff(pricare$IID, BMI$IID)) #0. So the pricare data isnt needed
+length(setdiff(pricare$IID, BMI$IID)) #0. So the pricare data isnt actually needed
 length(setdiff( BMI$IID, pricare$IID)) # 293722
 
 
@@ -129,7 +129,7 @@ summary(BMI_testo$BMI)
 # Need to remove patients with 15<=BMI>=79.5  
 BMI_testo = BMI_testo[BMI_testo$BMI>=15&BMI_testo$BMI<=79.5,] # 180949 patients left
 
-#Getting rid of columns I don't need. Final file should have IID, FID, Phenotype, COvariates, and Exposure
+#Getting rid of columns I don't need. Final file should have IID, FID, Phenotype, Covariates, and Exposure
 
 BMI_testo = BMI_testo[,c(1:3, 5:14,16,18)]
 
@@ -140,9 +140,9 @@ names(BMI_testo)
 
 colnames(BMI_testo)[2] = c("FID")
 
-##### Adding BMI PRS data 
+##### Adding BMI Polygenic Risk score (PRS) data 
 
-load(file = "/projects/sunlab/UKB/Data_clean/ukb_core_data_52576.rda")
+load(file = "/data/ukb_core_data_52576.rda")
 ls() # use this to find out what you just loaded. Name = bd
 
 grep("26216",names(bd),value=T) # finding Standard BMI PRS data.  ""f.26216.0.0""
@@ -172,15 +172,13 @@ summary(BMI_testo$Age_enrolled)
 # Min. 1st Qu.  Median    Mean     3rd Qu.    Max.
 #  39.00   50.00   57.00   56.16   63.00    70.00
 
-write.table(BMI_testo, file = "/projects/sunlab/Students_Work/Amonae_work/GEM_testo_BMI/Female/BMI_testo_f.pheno", row.names = F, quote = F)
+write.table(BMI_testo, file = "/data/GEM_testo_BMI/Female/BMI_testo_f.pheno", row.names = F, quote = F)
 
 #Summary stats pre-analysis
-# This site is good at helping interpret the output https://www.statology.org/interpret-glm-output-in-r/
-
 
 ##### Building BMI~PRSxTesto model
 
-BMI_testo = fread("/projects/sunlab/Students_Work/Amonae_work/GEM_testo_BMI/BMI_testo_m.pheno")
+BMI_testo = fread("/data/GEM_testo_BMI/Female/BMI_testo_f.pheno")
 head(BMI_testo)
 
 model = lm(formula = BMI ~ Age_enrolled + PC1 + PC2 + PC3 + PC4 + PC5 + PC6 + PC7 + PC8 + PC9 + PC10 + PRS_BMI * Testosterone, data = BMI_testo)
