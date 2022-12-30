@@ -3,12 +3,12 @@
 #SBATCH --partition=sunlab
 #SBATCH --nodes=1
 
-hormone = "SHBG"
-interaction = "BMI"
-sex = "Female"
+hormone="SHBG"
+interaction="BMI"
+sex="Male"
 
-working.dir = "/projects/sunlab/Students_Work/Amonae_work/GEM_$hormone/$interaction/$sex"
-cd working.dir
+dir="/projects/sunlab/Students_Work/Amonae_work/GEM_$hormone/$interaction/$sex"
+cd $dir
 
 gunzip *FUMA.txt.gz
 
