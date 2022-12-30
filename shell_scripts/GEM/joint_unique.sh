@@ -13,6 +13,6 @@ cd $dir
 gunzip *FUMA.txt.gz
 
 ml R/4.0.3
-joint_unique.R
+Rscript --vanilla joint_unique.R
 
 gzip *FUMA.txt 
