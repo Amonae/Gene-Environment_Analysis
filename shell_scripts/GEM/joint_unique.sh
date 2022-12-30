@@ -4,11 +4,13 @@
 #SBATCH --nodes=1
 
 hormone="SHBG"
-interaction="BMI"
-sex="Male"
+interaction=(BMI T2D CAD)
+sex=(Female Male)
 
-dir="/projects/sunlab/Students_Work/Amonae_work/GEM_$hormone/$interaction/$sex"
-cd $dir
+for x in "${interaction[@]}";
+do for y in "${sex[@]}";
+do dir="/projects/sunlab/Students_Work/Amonae_work/GEM_$hormone/$x/$y/FUMA_results";
+cd $dir;
 
 gunzip *FUMA.txt.gz
 
