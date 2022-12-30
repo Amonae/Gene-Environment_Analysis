@@ -81,3 +81,5 @@ names(inter_BP.2)[2:3] = c("BETA_inter", "P_inter")
 
 df.2 = cbind(marg_BP.2, inter_BP.2[,c(2,3)], joint_BP.2[,c(2,3)])
 write.csv(df.2, file = "joint_all_comp.csv")
+
+q()
