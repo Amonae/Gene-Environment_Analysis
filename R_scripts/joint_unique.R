@@ -67,3 +67,17 @@ names(inter_BP)[2:3] = c("BETA_inter", "P_inter")
 
 df = cbind(marg_BP, inter_BP[,c(2,3)], joint_BP[,c(2,3)])
 write.csv(df, file = "joint_unique_comp.csv")
+
+# Comparing all joint_loci Pvals to marg and intersection. 
+
+joint_BP.2 = joint[joint$SNPID %in% joint_loci$rsID,c("SNPID","BETA","P")]
+names(joint_BP.2)[2:3] = c("BETA_joint", "P_joint")
+
+marg_BP.2 = marg[marg$SNPID %in% joint_loci$rsID,c("SNPID","BETA","P")]
+names(marg_BP.2)[2:3] = c("BETA_marg", "P_marg")
+
+inter_BP.2 = inter[inter$SNPID %in% joint_loci$rsID,c("SNPID","BETA","P")]
+names(inter_BP.2)[2:3] = c("BETA_inter", "P_inter")
+
+df.2 = cbind(marg_BP.2, inter_BP.2[,c(2,3)], joint_BP.2[,c(2,3)])
+write.csv(df.2, file = "joint_all_comp.csv")
