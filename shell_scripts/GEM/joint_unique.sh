@@ -18,3 +18,5 @@ ml R/4.0.3
 Rscript --vanilla joint_unique.R
 
 gzip *FUMA.txt 
+done;
+done
