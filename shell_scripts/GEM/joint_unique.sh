@@ -9,7 +9,7 @@ sex=(Female Male)
 
 for x in "${interaction[@]}";
 do for y in "${sex[@]}";
-do dir="/projects/sunlab/Students_Work/Amonae_work/GEM_$hormone/$x/$y/FUMA_results";
+do dir="/projects/sunlab/Students_Work/Amonae_work/GEM_$hormone/$x/$y";
 cd $dir;
 
 gunzip *FUMA.txt.gz
