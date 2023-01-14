@@ -20,6 +20,6 @@ Shell-
 
 1. plink_gwasl.sh- This is used to run gwas via plink. In this analysis, I compared its output to GEM marginal effects. It was confirmed that marginal effects are the same as regular GWAS for outcome~ covariates+ genotype. <br/><br/>
 2. BMI_testo_GEM_chr1_22.sh- This is used to run GEM analysis on chromosomes 1-22. <br/><br/>
-3. unzip_FUMA.sh- This just unzips the FUMA results files. 
+3. unzip_FUMA.sh- This just unzips the FUMA results files. <br/><br/>
 4. joint_unique.sh- This is used in conjunction with the joint_unique.R file to unzip the FUMA.txt.gz files, run R, then rezip the files. <br/><br/>
 5. generic.sh- This is a versatile file for running R scripts.
