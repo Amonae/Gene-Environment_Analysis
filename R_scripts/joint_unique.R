@@ -1,6 +1,7 @@
 # remove everything in environment
 rm(list=ls())
 
+print(getwd())
 # This will create a csv file comparing Beta and P values between marginal and interaction results to joint results 
 # Setting Paths
 
@@ -8,15 +9,15 @@ r.libs = "/projects/sunlab/R.lib"
 
 # Load libraries
 
-library(data.table,lib.loc= r.libs)
-library(crayon,lib.loc= r.libs)
-library(dplyr,lib.loc= r.libs)
-library(cli,lib.loc= r.libs)
-library(BiocGenerics,lib.loc= r.libs)
-library(S4Vectors,lib.loc= r.libs)
-library(IRanges,lib.loc= r.libs)
-library(GenomeInfoDb,lib.loc= r.libs)
-library(GenomicRanges,lib.loc= r.libs) 
+suppressPackageStartupMessages(library(data.table,lib.loc= r.libs))
+suppressPackageStartupMessages(library(crayon,lib.loc= r.libs))
+suppressPackageStartupMessages(library(dplyr,lib.loc= r.libs))
+suppressPackageStartupMessages(library(cli,lib.loc= r.libs))
+suppressPackageStartupMessages(library(BiocGenerics,lib.loc= r.libs))
+suppressPackageStartupMessages(library(S4Vectors,lib.loc= r.libs))
+suppressPackageStartupMessages(library(IRanges,lib.loc= r.libs))
+suppressPackageStartupMessages(library(GenomeInfoDb,lib.loc= r.libs))
+suppressPackageStartupMessages(library(GenomicRanges,lib.loc= r.libs)) 
 
 # Loading data
 
@@ -53,25 +54,34 @@ names(joint_ranges) = joint_loci$rsID
 
 overlaps = subsetByOverlaps(joint_ranges, marg_ranges) 
 joint_unique = setdiff(joint_loci$rsID, names(overlaps))
+print(paste(length(joint_unique), "unique joint SNPS"))
 
 # Comparing unique joint Pvals to marg and intersection. 
 
-joint_BP = joint[joint$SNPID %in% joint_unique,c("SNPID","BETA","P")]
-names(joint_BP)[2:3] = c("BETA_joint", "P_joint")
+joint_BP = joint[joint$SNPID %in% joint_unique,c("SNPID","CHR", "POS","BETA","P")]
+names(joint_BP)[4:5] = c("BETA_joint", "P_joint")
+print("Joint Beta and Pvals")
+print(head(joint_BP))
+
 
 marg_BP = marg[marg$SNPID %in% joint_unique,c("SNPID","BETA","P")]
 names(marg_BP)[2:3] = c("BETA_marg", "P_marg")
+print("Marginal Beta and Pvals")
+print(head(marg_BP))
 
 inter_BP = inter[inter$SNPID %in% joint_unique,c("SNPID","BETA","P")]
 names(inter_BP)[2:3] = c("BETA_inter", "P_inter")
+print("Interaction Beta and Pvals")
+print(head(inter_BP))
 
-df = cbind(marg_BP, inter_BP[,c(2,3)], joint_BP[,c(2,3)])
+
+df = cbind(joint_BP, inter_BP[,c(2,3)], marg_BP[,c(2,3)])
 write.csv(df, file = "joint_unique_comp.csv")
-
+print("joint_unique_comp saved")
 # Comparing all joint_loci Pvals to marg and intersection. 
 
-joint_BP.2 = joint[joint$SNPID %in% joint_loci$rsID,c("SNPID","BETA","P")]
-names(joint_BP.2)[2:3] = c("BETA_joint", "P_joint")
+joint_BP.2 = joint[joint$SNPID %in% joint_loci$rsID,c("SNPID","CHR", "POS","BETA","P")]
+names(joint_BP.2)[4:5] = c("BETA_joint", "P_joint")
 
 marg_BP.2 = marg[marg$SNPID %in% joint_loci$rsID,c("SNPID","BETA","P")]
 names(marg_BP.2)[2:3] = c("BETA_marg", "P_marg")
@@ -79,7 +89,8 @@ names(marg_BP.2)[2:3] = c("BETA_marg", "P_marg")
 inter_BP.2 = inter[inter$SNPID %in% joint_loci$rsID,c("SNPID","BETA","P")]
 names(inter_BP.2)[2:3] = c("BETA_inter", "P_inter")
 
-df.2 = cbind(marg_BP.2, inter_BP.2[,c(2,3)], joint_BP.2[,c(2,3)])
+df.2 = cbind(joint_BP.2, inter_BP.2[,c(2,3)], marg_BP.2[,c(2,3)])
 write.csv(df.2, file = "joint_all_comp.csv")
+print("joint_unique_all saved")
 
 q()

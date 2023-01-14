@@ -1,17 +1,18 @@
 ## Calculate Odds Ratios for different groups
 
-# print working directory
-getwd()
-
 # load all R libraries and remove objects from environment
 
 rm(list=ls())
-library(data.table)
-library(crayon)
-library(dplyr)
-library(cli)
-library(ggplot2)
-library(epitools) # Note different lib loc
+library(data.table,lib.loc="R.lib")
+library(crayon,lib.loc="R.lib")
+library(dplyr,lib.loc="R.lib")
+library(cli,lib.loc="R.lib")
+library(withr,lib.loc="R.lib")
+library(labeling,lib.loc="R.lib")
+library(farver,lib.loc="R.lib")
+library(digest,lib.loc="R.lib")
+library(ggplot2,lib.loc="R.lib")
+library(epitools, lib.loc = "R.lib") 
 
 
 # Loading data
@@ -122,5 +123,3 @@ OR_plot = results_df %>%
 ggsave('OR_plot.png', OR_plot, device='png', width=5, units="in")
 
 print("Plot Saved")
-
-
