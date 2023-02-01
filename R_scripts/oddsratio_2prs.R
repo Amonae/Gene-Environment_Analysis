@@ -98,16 +98,25 @@ print("Odds Ratio CSV saved")
 ############## Creating forest plot
 
 
-OR_FP = results_df %>%
-  ggplot(aes(y=Hormone_group, x=Odds_Ratio, label=Hormone_group)) +
-  geom_point(size=1, shape=19) +
-  geom_errorbarh(aes(xmin=C.I.95_Lower, xmax=C.I.95_Upper), height=.3) +
-  geom_vline(xintercept=1, linetype='longdash') +
-  facet_wrap(~factor(PRS_group, levels = c("low PRS", "high_PRS")), ncol=2)
+OR_FP = ggplot(data=results_df,
+           aes(x = Hormone_group,y = Odds_Ratio, ymin = C.I.95_Lower, ymax = C.I.95_Upper ))+
+  geom_pointrange(aes(col=Hormone_group))+
+  geom_hline(aes(fill=Hormone_group),yintercept =1, linetype=2)+
+  xlab('Hormone group')+ ylab("Odds Ratio (95% Confidence Interval)")+
+  geom_errorbar(aes(ymin=C.I.95_Lower, ymax=C.I.95_Upper,col=Hormone_group),width=0.5,cex=1)+ 
+  facet_wrap(~PRS_group,strip.position="left",nrow=9,scales = "free_y") +
+  theme(plot.title=element_text(size=16,face="bold"),
+        axis.text.y=element_blank(),
+        axis.ticks.y=element_blank(),
+        axis.text.x=element_text(face="bold"),
+        axis.title=element_text(size=12,face="bold"),
+        strip.text.y = element_text(hjust=0,vjust = 1,angle=180,face="bold"))+
+  coord_flip()
 
 ggsave('OR_Forestplot_2PRS.png', OR_FP, device='png', width=5, units="in")
 
 print("Forest Plot Saved")
+
 
 ############## Bar plot
 	
